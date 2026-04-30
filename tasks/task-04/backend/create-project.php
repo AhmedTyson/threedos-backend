@@ -15,9 +15,7 @@ $project_id = '';
 
 if (isset($_GET['id'])) {
     $project_id = $_GET['id'];
-    $stmt = $connection->prepare("SELECT * FROM project WHERE ProjectID = :id AND UserID = :user_id");
-    $stmt->execute([':id' => $project_id, ':user_id' => $user_id]);
-    $project = $stmt->fetch(PDO::FETCH_ASSOC);
+    $project = getProject($connection, $project_id, $user_id);
     
     if ($project) {
         $is_edit = true;

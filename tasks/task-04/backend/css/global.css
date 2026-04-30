@@ -58,7 +58,19 @@ body {
     border-radius: 0;
     position: fixed;
     height: 100vh;
-    z-index: 10;
+    z-index: 100; /* Higher z-index to stay on top */
+}
+
+.sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    margin: 1rem 0;
+    /* Hide scrollbar but keep functionality */
+    scrollbar-width: none; 
+}
+
+.sidebar nav::-webkit-scrollbar {
+    display: none;
 }
 
 .main-content {
@@ -335,3 +347,25 @@ textarea.form-input::placeholder {
 .toast-icon-success { color: var(--green); }
 .toast-icon-error   { color: var(--red); }
 .toast-icon-info    { color: var(--primary-color); }
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 1rem;
+    width: 100%;
+    background: rgba(239, 68, 68, 0.05); /* Slight red tint even in normal state */
+    border: 1px solid rgba(239, 68, 68, 0.2); /* More visible border */
+    border-radius: var(--radius);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.logout-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--red);
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}

@@ -10,7 +10,7 @@ $user_id     = $_SESSION['user_id'];
 $name        = $_POST['task_name'];
 $description = $_POST['description'];
 $project_id  = $_POST['project_id'];
-$priority    = $_POST['priority'];
+$priorityId  = (int)$_POST['priority'];
 $status_id   = 1;
 if (isset($_POST['status_id'])) {
     $status_id = (int)$_POST['status_id'];
@@ -18,15 +18,9 @@ if (isset($_POST['status_id'])) {
 $start_date  = $_POST['start_date'];
 $end_date    = $_POST['end_date'];
 
-if (empty($name) || empty($project_id) || empty($priority)) {
+if (empty($name) || empty($project_id) || empty($priorityId)) {
     header("Location: ../create-task.php?status=empty");
     exit();
-}
-
-$priorityMap = ['high' => 1, 'medium' => 2, 'low' => 3];
-$priorityId = 2;
-if (isset($priorityMap[$priority])) {
-    $priorityId = $priorityMap[$priority];
 }
 
 $query = "INSERT INTO task (Name, Description, StartDate, EndDate, isArchived, ProjectID, AssignedToUserID, StatusID, PriorityID, CategoryID) VALUES (:name, :description, :start_date, :end_date, 0, :project_id, :user_id, :status_id, :priority_id, 2)";

@@ -53,7 +53,7 @@ function filterTasks(priority) {
     const cards = document.querySelectorAll('.task-card');
     cards.forEach(card => {
         if (priority === 'all' || card.getAttribute('data-priority') === priority) {
-            card.style.display = 'flex';
+            card.style.display = 'block';
             card.style.animation = 'none';
             card.offsetHeight;
             card.style.animation = '';

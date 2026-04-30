@@ -3,7 +3,7 @@ function initCustomSelects() {
 
     selects.forEach(nativeSelect => {
         const container = document.createElement('div');
-        container.className = 'custom-select-container';
+        container.className = 'custom-select-container ' + nativeSelect.className;
 
         const trigger = document.createElement('div');
         trigger.className = 'select-trigger';
@@ -56,7 +56,10 @@ function closeAllSelects() {
 }
 
 function isPriorityValue(val) {
-    return ['high', 'medium', 'low'].includes(val.toLowerCase());
+    if (!window.ORGANIZO_CONFIG || !window.ORGANIZO_CONFIG.priorities) {
+        return ['high', 'medium', 'low'].includes(val.toLowerCase());
+    }
+    return window.ORGANIZO_CONFIG.priorities.some(p => p.slug === val.toLowerCase());
 }
 
 function setTriggerContent(trigger, option) {

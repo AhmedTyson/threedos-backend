@@ -2,10 +2,7 @@
 require "config/auth.php";
 $user_id = $_SESSION['user_id'];
 
-$query = "SELECT project.*, COUNT(task.TaskID) AS TaskCount FROM project LEFT JOIN task ON project.ProjectID = task.ProjectID WHERE project.UserID = :user_id GROUP BY project.ProjectID ORDER BY project.Name ASC";
-$stmt = $connection->prepare($query);
-$stmt->execute([':user_id' => $user_id]);
-$projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$projects = getProjects($connection, $user_id);
 
 include 'includes/layout.php';
 ?>
@@ -30,31 +27,7 @@ include 'includes/layout.php';
             </div>
         <?php else: ?>
             <?php foreach ($projects as $index => $project): ?>
-                <div class="task-card glass animate-fade">
-                    <div class="task-card-header">
-                        <span class="project-tag">
-                            <span class="iconify" data-icon="lucide:folder"></span>
-                        </span>
-                        <div class="archive-actions">
-                            <a href="create-project.php?id=<?php echo $project['ProjectID']; ?>" class="action-btn" title="Edit Project">
-                                <span class="iconify" data-icon="lucide:edit"></span>
-                            </a>
-                            <form action="actions/delete-project.php" method="POST" style="display: inline-block;">
-                                <input type="hidden" name="project_id" value="<?php echo $project['ProjectID']; ?>">
-                                <button type="submit" class="action-btn delete-btn" title="Delete Project" style="cursor: pointer; position: relative; z-index: 999;">
-                                    <span class="iconify" data-icon="lucide:trash-2"></span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <h3 class="task-title"><?php echo htmlspecialchars($project['Name']); ?></h3>
-                    <p class="task-desc project-desc dim-text">
-                        <?php echo htmlspecialchars($project['Description'] ?: 'No tagline provided for this project.'); ?>
-                    </p>
-                    <p class="task-desc dim-text">
-                        Contains <?php echo $project['TaskCount']; ?> task(s).
-                    </p>
-                </div>
+                <?php include 'includes/project-card.php'; ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

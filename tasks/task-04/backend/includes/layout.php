@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config/functions.php';
 if (!function_exists('getPageMetadata')) {
     function getPageMetadata() {
         $currentFile = basename($_SERVER['PHP_SELF']);
@@ -28,6 +29,12 @@ if (!isset($extraJS)) $extraJS = $metadata['js'];
 if (!isset($noSidebar)) $noSidebar = $metadata['noSidebar'];
 
 if (!isset($isFooter)) {
+    // Fetch dynamic config for JS
+    $jsConfig = ['priorities' => [], 'statuses' => []];
+    if (isset($connection) && function_exists('getPriorities')) {
+        $jsConfig['priorities'] = getPriorities($connection);
+        $jsConfig['statuses']   = getStatuses($connection);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +42,9 @@ if (!isset($isFooter)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?></title>
+    <script>
+        window.ORGANIZO_CONFIG = <?php echo json_encode($jsConfig); ?>;
+    </script>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/forms.css">
@@ -66,6 +76,12 @@ if (!isset($isFooter)) {
                     Archive
                 </a>
             </nav>
+            <div class="sidebar-footer">
+                <a href="actions/logout.php" class="logout-btn">
+                    <span class="iconify" data-icon="lucide:log-out"></span>
+                    Logout
+                </a>
+            </div>
         </aside>
         <?php endif; ?>
 <?php

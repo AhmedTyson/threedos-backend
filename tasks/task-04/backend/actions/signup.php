@@ -37,8 +37,14 @@ $success = $statement->execute([
 ]);
 
 if ($success) {
+    // Auto-login the user
+    $_SESSION['user_id']  = $connection->lastInsertId();
+    $_SESSION['username'] = $username;
+    $_SESSION['email']    = $email;
+
     header("Location: ../dashboard.php?status=created");
     exit();
 } else {
-    echo "Error creating record.";
+    header("Location: ../signup.php?status=error");
+    exit();
 }

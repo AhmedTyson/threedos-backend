@@ -49,6 +49,17 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
+/* Overrides for filter-style selects */
+.custom-select-container.filter-select .select-trigger {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+}
+
+.custom-select-container.filter-select .select-trigger:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .custom-select-options {
     position: absolute;
     top: calc(100% + 8px);
@@ -87,31 +98,20 @@
 }
 
 
+/* Priority Dots (used in custom selects) */
 .priority-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 12px;
     flex-shrink: 0;
 }
 
-.priority-dot.high   { background-color: var(--red);   box-shadow: 0 0 8px rgba(239, 68, 68, 0.5); }
-.priority-dot.medium { background-color: var(--amber); box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
-.priority-dot.low    { background-color: var(--green); box-shadow: 0 0 8px rgba(16, 185, 129, 0.5); }
-
-.priority-badge {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.priority-high   { background: rgba(239, 68, 68, 0.2); color: var(--red); }
-.priority-medium { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
-.priority-low    { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+/* Use color variables from global.css for consistency */
+.priority-dot.high   { background-color: var(--red);   box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+.priority-dot.medium { background-color: var(--amber); box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+.priority-dot.low    { background-color: var(--green); box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
 
 
 input[type="date"].form-input {

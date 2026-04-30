@@ -2,10 +2,7 @@
 require "config/auth.php";
 $user_id = $_SESSION['user_id'];
 
-$projQuery = "SELECT ProjectID, Name FROM project WHERE UserID = :user_id ORDER BY Name ASC";
-$projStmt = $connection->prepare($projQuery);
-$projStmt->execute([':user_id' => $user_id]);
-$userProjects = $projStmt->fetchAll(PDO::FETCH_ASSOC);
+$userProjects = getProjects($connection, $user_id);
 
 $is_edit = false;
 $task_data = [
@@ -25,9 +22,7 @@ $task_id = '';
 
 if (isset($_GET['id'])) {
     $task_id = $_GET['id'];
-    $stmt = $connection->prepare("SELECT task.* FROM task JOIN project ON task.ProjectID = project.ProjectID WHERE task.TaskID = :id AND project.UserID = :user_id");
-    $stmt->execute([':id' => $task_id, ':user_id' => $user_id]);
-    $task = $stmt->fetch(PDO::FETCH_ASSOC);
+    $task = getTask($connection, $task_id, $user_id);
     
     if ($task) {
         $is_edit = true;
@@ -88,17 +83,21 @@ include 'includes/layout.php';
                     <div class="form-group">
                         <label class="form-label">Priority</label>
                         <select name="priority" class="form-input">
-                            <option value="high" <?php echo ($task_data['PriorityID'] == 1) ? 'selected' : ''; ?>>High Priority</option>
-                            <option value="medium" <?php echo ($task_data['PriorityID'] == 2) ? 'selected' : ''; ?>>Medium Priority</option>
-                            <option value="low" <?php echo ($task_data['PriorityID'] == 3) ? 'selected' : ''; ?>>Low Priority</option>
+                            <?php foreach (getPriorities($connection) as $p): ?>
+                                <option value="<?php echo $p['id']; ?>" <?php echo ($task_data['PriorityID'] == $p['id']) ? 'selected' : ''; ?>>
+                                    <?php echo $p['name']; ?> Priority
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Status</label>
                         <select name="status_id" class="form-input">
-                            <option value="1" <?php echo ($task_data['StatusID'] == 1) ? 'selected' : ''; ?>>To Do</option>
-                            <option value="2" <?php echo ($task_data['StatusID'] == 2) ? 'selected' : ''; ?>>In Progress</option>
-                            <option value="3" <?php echo ($task_data['StatusID'] == 3) ? 'selected' : ''; ?>>Done</option>
+                            <?php foreach (getStatuses($connection) as $s): ?>
+                                <option value="<?php echo $s['id']; ?>" <?php echo ($task_data['StatusID'] == $s['id']) ? 'selected' : ''; ?>>
+                                    <?php echo $s['name']; ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="form-group">
