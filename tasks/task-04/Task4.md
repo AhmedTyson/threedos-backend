@@ -38,7 +38,7 @@ Here are the architectural diagrams I designed to model the Organizo platform:
 **Status:** Completed <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%2310b981" width="18" align="text-bottom" />
 
 The database schema is complete and matches the physical ERD above. The final SQL export with all tables, constraints, and exact types is available here:
-<img src="https://api.iconify.design/lucide:corner-down-right.svg?color=%238A2BE2" width="18" align="text-bottom" /> **[`backend/organizo_platform.sql`](backend/organizo_platform.sql)**
+<img src="https://api.iconify.design/lucide:corner-down-right.svg?color=%238A2BE2" width="18" align="text-bottom" /> **[`backend/database/organizo_platform.sql`](backend/database/organizo_platform.sql)**
 
 ---
 
@@ -48,14 +48,22 @@ The database schema is complete and matches the physical ERD above. The final SQ
 > - Receives all task fields and inserts a new task linked to that project
 > - Uses prepared statements and placeholders to prevent SQL injection
 
-**Status:** Pending <img src="https://api.iconify.design/lucide:clock.svg?color=%23f59e0b" width="18" align="text-bottom" /> (To be completed later)
+**Status:** Completed <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%2310b981" width="18" align="text-bottom" />
+
+The CRUD operations for both projects and tasks are implemented using PDO prepared statements.
+- **Project Creation:** [`backend/actions/create-project.php`](backend/actions/create-project.php)
+- **Task Creation:** [`backend/actions/create-task.php`](backend/actions/create-task.php)
 
 ---
 
 ### Q4: Fetch User Data
 > **Objective:** Write a PHP code snippet using PDO that fetches all projects belonging to a specific user, along with all the tasks inside each project. The result should come back in a single joined query. (in human readable way)
 
-**Status:** Pending <img src="https://api.iconify.design/lucide:clock.svg?color=%23f59e0b" width="18" align="text-bottom" /> (To be completed later)
+**Status:** Completed <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%2310b981" width="18" align="text-bottom" />
+
+Fetching of user-specific data is implemented with optimized JOIN queries to retrieve task counts and project details in single requests.
+- **Projects & Task Count:** [`backend/projects.php`](backend/projects.php)
+- **All Active Tasks:** [`backend/dashboard.php`](backend/dashboard.php)
 
 ---
 
@@ -65,4 +73,7 @@ The database schema is complete and matches the physical ERD above. The final SQ
 > - Returns all non-archived tasks for that user matching the given priority
 > - Uses prepared statements and placeholders
 
-**Status:** Pending <img src="https://api.iconify.design/lucide:clock.svg?color=%23f59e0b" width="18" align="text-bottom" /> (To be completed later)
+**Status:** Completed <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%2310b981" width="18" align="text-bottom" />
+
+The task filtering is implemented using a custom PHP function that processes the fetched task array based on a `GET` parameter.
+- **Filter Logic:** [`backend/dashboard.php`](backend/dashboard.php) (See `filterTasksByPriority` function)

@@ -1,0 +1,52 @@
+
+.task-card.archived {
+    opacity: 0.6;
+}
+
+.task-card.archived:hover {
+    opacity: 0.85;
+}
+
+.task-card.archived h3 {
+    text-decoration: line-through;
+    text-decoration-color: var(--text-dim);
+}
+
+.archive-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.archive-actions .iconify {
+    cursor: pointer;
+    font-size: 18px;
+    transition: var(--transition);
+}
+
+.archive-actions .restore-btn {
+    color: var(--primary-color);
+}
+
+.archive-actions .delete-btn {
+    color: var(--red);
+}
+
+.archive-actions .restore-btn:hover {
+    filter: drop-shadow(0 0 6px var(--primary-glow));
+}
+
+.archive-actions .delete-btn:hover {
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.5));
+}
+
+
+.empty-state {
+    padding: 5rem;
+    text-align: center;
+}
+
+.empty-state .iconify {
+    font-size: 64px;
+    color: var(--glass-border);
+    margin-bottom: 1rem;
+}

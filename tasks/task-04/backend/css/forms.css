@@ -1,0 +1,133 @@
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 700px;
+    padding: 3rem;
+}
+
+.form-card-wide {
+    width: 100%;
+    max-width: 800px;
+    padding: 3rem;
+}
+
+.form-header {
+    width: 100%;
+    max-width: 700px;
+}
+
+.form-header-wide {
+    width: 100%;
+    max-width: 800px;
+}
+
+.full-width-btn {
+    width: 100%;
+}
+
+.submit-btn-auth {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.header-margin {
+    margin-bottom: 3rem;
+}
+
+
+.stat-header {
+    margin-bottom: 3rem;
+}
+
+
+.task-grid-empty {
+    grid-column: span 3;
+    padding: 5rem;
+    text-align: center;
+    width: 100%;
+}
+
+.empty-icon {
+    font-size: 64px;
+    color: var(--glass-border);
+    margin-bottom: 1rem;
+}
+
+.dim-text {
+    color: var(--text-dim);
+}
+
+
+.filter-select {
+    width: auto;
+    padding: 0.5rem 2.5rem 0.5rem 0.5rem;
+    border: none;
+    background: transparent;
+}
+
+.task-title {
+    margin-bottom: 0.5rem;
+}
+
+.task-desc {
+    font-size: 0.9rem;
+}
+
+.more-options {
+    color: var(--text-dim);
+    cursor: pointer;
+}
+
+textarea.form-input {
+    height: 120px;
+    resize: none;
+}
+
+
+.data-table-wrapper {
+    overflow-x: auto;
+    padding: 1.5rem;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--text-main);
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+}
+
+.data-table thead tr {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid var(--glass-border);
+    transition: background 0.2s;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.empty-table-msg {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-dim);
+}
+
+
+.cancel-link {
+    margin-top: 1.5rem;
+}
