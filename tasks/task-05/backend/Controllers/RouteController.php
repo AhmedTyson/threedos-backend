@@ -16,6 +16,10 @@ function handlePostRoute(PDO $conn) {
     try {
         $data = getJsonInput(['origin', 'destination', 'distance', 'classification']);
 
+        if (!in_array($data['classification'], ['Domestic', 'International'])) {
+            response(HttpStatus::BAD_REQUEST, "Classification must be 'Domestic' or 'International'.");
+        }
+
         if (strtolower($data['origin']) === strtolower($data['destination'])) {
             response(HttpStatus::BAD_REQUEST, "Origin and destination cannot be the same.");
         }

@@ -182,7 +182,7 @@ CREATE TABLE `route` (
   `Origin` varchar(100) NOT NULL,
   `Destination` varchar(100) NOT NULL,
   `Distance` decimal(10,2) NOT NULL,
-  `Classification` varchar(50) NOT NULL
+  `Classification` enum('Domestic','International') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -191,12 +191,12 @@ CREATE TABLE `route` (
 
 INSERT INTO `route` (`RouteID`, `Origin`, `Destination`, `Distance`, `Classification`) VALUES
 (1, 'Cairo', 'London', 3500.00, 'International'),
-(2, 'CAI', 'LHR', 3510.50, 'International - Long Haul'),
-(3, 'DXB', 'JFK', 11000.20, 'International - Ultra Long Haul'),
-(4, 'CAI', 'HRG', 400.00, 'Domestic - Short Haul'),
-(5, 'CAI', 'LHR', 3510.50, 'International - Long Haul'),
-(6, 'DXB', 'JFK', 11000.20, 'International - Ultra Long Haul'),
-(7, 'CAI', 'HRG', 400.00, 'Domestic - Short Haul');
+(2, 'CAI', 'LHR', 3510.50, 'International'),
+(3, 'DXB', 'JFK', 11000.20, 'International'),
+(4, 'CAI', 'HRG', 400.00, 'Domestic'),
+(5, 'CAI', 'LHR', 3510.50, 'International'),
+(6, 'DXB', 'JFK', 11000.20, 'International'),
+(7, 'CAI', 'HRG', 400.00, 'Domestic');
 
 -- --------------------------------------------------------
 
