@@ -1,0 +1,658 @@
+{
+  "info": {
+    "_postman_id": "a716fe79-58e0-412d-a030-61477b77b4cf",
+    "name": "Airline Management System API",
+    "description": "# Airline Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49870090",
+    "_collection_link": "https://go.postman.co/collection/49870090-a716fe79-58e0-412d-a030-61477b77b4cf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "1. Airlines",
+      "item": [
+        {
+          "name": "Get All Airlines",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airlines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ]
+            },
+            "description": "Retrieves all airlines registered in the system."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Airline by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airlines?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Airline ID"
+                }
+              ]
+            },
+            "description": "Fetches a single airline by its primary key."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Airlines by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airlines?name=Egypt",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Egypt",
+                  "description": "Search keyword"
+                }
+              ]
+            },
+            "description": "Performs a LIKE search on airline names."
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Airline",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"EgyptAir\",\n    \"address\": \"Cairo International Airport, Cairo, Egypt\",\n    \"contact_person\": \"Ahmed Hassan\",\n    \"phone\": \"+20-2-2696-0000\",\n    \"balance\": 500000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airlines",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ]
+            },
+            "description": "Creates a new airline. Only `name` is required. Returns the full created record."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Airline (Partial)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"EgyptAir International\",\n    \"phone\": \"+20-2-2696-1111\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/airlines?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Partially updates an airline. Only send the fields you want to change."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Airline",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/airlines?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "airlines"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes an airline. Will fail if it has active aircraft, transactions, or routes."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Employees",
+      "item": [
+        {
+          "name": "Get All Employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "employees"
+              ]
+            },
+            "description": "Retrieves all employees with their airline names."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Employees by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/employees?name=Ahmed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "employees"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Ahmed",
+                  "description": "Employee name search"
+                }
+              ]
+            },
+            "description": "Searches employees by name using LIKE pattern."
+          },
+          "response": []
+        },
+        {
+          "name": "Register New Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"airline_id\": 1,\n    \"name\": \"Ahmed Hassan\",\n    \"birth_date\": \"1995-03-15\",\n    \"gender\": \"M\",\n    \"position\": \"Senior Pilot\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "employees"
+              ]
+            },
+            "description": "Registers a new employee under an airline. All fields are required. Returns the full created record with airline name."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/employees?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "employees"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Removes an employee. Fails if they are part of an active crew."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Aircraft",
+      "item": [
+        {
+          "name": "Get All Aircraft",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/aircraft",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "aircraft"
+              ]
+            },
+            "description": "Retrieves the full fleet of aircraft."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Aircraft to Fleet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"airline_id\": 1,\n    \"model\": \"Boeing 777-300ER\",\n    \"capacity\": 396\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/aircraft",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "aircraft"
+              ]
+            },
+            "description": "Registers a new aircraft under an airline. Returns the full created record."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Aircraft from Fleet",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/aircraft?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "aircraft"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Deletes an aircraft. Fails if it has an assigned crew or scheduled flights."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Routes & Scheduling",
+      "item": [
+        {
+          "name": "Get All Routes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/routes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "routes"
+              ]
+            },
+            "description": "Retrieves all defined flight routes."
+          },
+          "response": []
+        },
+        {
+          "name": "Create New Route",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"origin\": \"Cairo (CAI)\",\n    \"destination\": \"Dubai (DXB)\",\n    \"distance\": 2407,\n    \"classification\": \"International\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/routes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "routes"
+              ]
+            },
+            "description": "Defines a new flight route. Returns the full created record."
+          },
+          "response": []
+        },
+        {
+          "name": "Schedule Flight (Assign Route)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"aircraft_id\": 1,\n    \"route_id\": 1,\n    \"departure\": \"2026-06-15 08:00:00\",\n    \"arrival\": \"2026-06-15 12:30:00\",\n    \"passengers\": 280,\n    \"ticket_price\": 450\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/assign-route",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "assign-route"
+              ]
+            },
+            "description": "Schedules a flight by assigning an aircraft to a route. All 6 fields are required. Validates: arrival must be after departure, passengers and ticket_price must be positive."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Flight Schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/flight-schedules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "flight-schedules"
+              ]
+            },
+            "description": "Retrieves all scheduled flights with aircraft model and route details (origin/destination)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Transactions",
+      "item": [
+        {
+          "name": "Get All Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Retrieves the full financial ledger with airline names, ordered by date descending."
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Transaction (Buy)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"airline_id\": 1,\n    \"amount\": 75000,\n    \"type\": \"buy\",\n    \"description\": \"Purchased new engine parts for Boeing 777\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Executes a purchase transaction. ACID-compliant: creates the record and subtracts from the airline balance atomically. Fails if balance is insufficient."
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Transaction (Sell)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"airline_id\": 1,\n    \"amount\": 120000,\n    \"type\": \"sell\",\n    \"description\": \"Revenue from Cairo-Dubai ticket sales\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions"
+              ]
+            },
+            "description": "Executes a sale transaction. Adds the amount to the airline balance atomically. Returns the full transaction record."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Transactions Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transactions",
+                "summary"
+              ]
+            },
+            "description": "Returns an aggregated financial summary: total sales, total purchases, net balance, and transaction count."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Crews",
+      "item": [
+        {
+          "name": "Get All Crews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crews"
+              ]
+            },
+            "description": "Retrieves all crews with their aircraft details and member lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Crew to Aircraft",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"aircraft_id\": 1,\n    \"members\": [\n        {\"name\": \"Capt. Mohamed Ali\", \"role\": \"Major Pilot\"},\n        {\"name\": \"F.O. Youssef Ibrahim\", \"role\": \"Assistant Pilot\"},\n        {\"name\": \"Sara Ahmed\", \"role\": \"Hostess\"},\n        {\"name\": \"Nour Hassan\", \"role\": \"Hostess\"}\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/crews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crews"
+              ]
+            },
+            "description": "Assigns a crew to an aircraft. Strict validation: exactly 4 members (1 Major Pilot, 1 Assistant Pilot, 2 Hostesses). Returns the full crew record. Fails if the aircraft already has a crew."
+          },
+          "response": []
+        },
+        {
+          "name": "Disband Crew",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/crews?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "crews"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Removes a crew and all its members from the system."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost/session5/routes/api.php"
+    }
+  ]
+}
