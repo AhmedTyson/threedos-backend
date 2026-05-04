@@ -35,8 +35,12 @@ threedos-backend/
 ├── .gitignore
 │
 └── tasks/
-    └── task-04/
-        ├── task.md
+    ├── task-04/
+    │   ├── Task4.md
+    │   ├── diagrams/
+    │   └── backend/
+    └── task-05/
+        ├── Task5.md
         ├── diagrams/
         └── backend/
 ```
@@ -50,6 +54,7 @@ Each `task-XX` folder is self-contained. The `task.md` file describes the assign
 | Task Folder | Task Name | Tech / Format | Notes                                      |
 | ----------- | --------- | ------------- | ------------------------------------------ |
 | tasks/task-04 | Organizo Platform | PHP / PDO / CSS | Full CRUD with Priority Filtering & Archiving |
+| tasks/task-05 | Airline Management System | PHP / PDO / REST API | ERD Design, Full REST API with ACID Transactions |
 
 ---
 
