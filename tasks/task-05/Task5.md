@@ -79,7 +79,7 @@ Here are the architectural diagrams designed to model the Airline Management Sys
 <img src="https://api.iconify.design/lucide:corner-down-right.svg?color=%238A2BE2" width="18" align="text-bottom" /> **[`backend/database/airline_db.sql`](backend/database/airline_db.sql)**
 
 **Postman collection:**
-<img src="https://api.iconify.design/lucide:corner-down-right.svg?color=%238A2BE2" width="18" align="text-bottom" /> **[`backend/Airline_API_PRO.postman_collection.json`](backend/Airline_API_PRO.postman_collection.json)**
+<img src="https://api.iconify.design/lucide:corner-down-right.svg?color=%238A2BE2" width="18" align="text-bottom" /> **[`backend/Airline Management System API.postman_collection.json`](backend/Airline%20Management%20System%20API.postman_collection.json)**
 
 ---
 
