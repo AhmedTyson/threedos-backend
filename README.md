@@ -43,8 +43,11 @@ threedos-backend/
     │   ├── Task5.md
     │   ├── diagrams/
     │   └── backend/
-    └── task-06/
-        └── Task6.md
+    ├── task-06/
+    │   └── Task6.md
+    └── task-07/
+        ├── Task7.md
+        └── backend/
 ```
 
 Each `task-XX` folder is self-contained. The `task.md` file describes the assignment. The solution files contain the actual work: scripts, schemas, or any documentation the task required.
@@ -58,6 +61,7 @@ Each `task-XX` folder is self-contained. The `task.md` file describes the assign
 | tasks/task-04 | Organizo Platform | PHP / PDO / CSS | Full CRUD with Priority Filtering & Archiving |
 | tasks/task-05 | Airline Management System | PHP / PDO / REST API | ERD Design, Full REST API with ACID Transactions |
 | tasks/task-06 | Doctorna REST API | PHP / PDO / REST API | Vanilla PHP, no framework, JWT Auth, Redis Caching |
+| tasks/task-07 | To-Do List Management API | Laravel / SQLite | Eloquent ORM, Migrations, Full CRUD, API |
 
 ---
 
