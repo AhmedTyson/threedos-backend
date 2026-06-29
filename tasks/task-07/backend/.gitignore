@@ -21,8 +21,7 @@
 /storage/*.key
 /storage/pail
 /vendor
-/telescope-ui/node_modules
-/telescope-ui/dist
+/telescope-ui
 /public/vendor/telescope-dashboard
 _ide_helper.php
 Homestead.json
