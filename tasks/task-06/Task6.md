@@ -2,7 +2,7 @@
 
 ## <img src="https://api.iconify.design/lucide:book-open.svg?color=%238A2BE2" width="24" align="top" /> Brief
 
-Study and analyze **Doctorna**, an open-source clinic management and medical appointment booking REST API built entirely in Vanilla PHP — no frameworks, no Laravel, no Symfony. The goal is to understand how clean architecture, performance patterns, and secure authentication can be implemented from scratch without relying on heavy external libraries.
+Build a team project of your own idea that satisfies the given requirements. The team chose to build **Doctorna** — a clinic management and medical appointment booking REST API built entirely in Vanilla PHP — no frameworks, no Laravel, no Symfony.
 
 ---
 
@@ -39,7 +39,7 @@ The project must include the following features:
 
 ## <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%238A2BE2" width="24" align="top" /> Deliverable
 
-This task was completed by studying the Doctorna project — a real-world, production-grade PHP REST API that satisfies all the above requirements.
+This task was completed by building the Doctorna project as a team — a real-world, production-grade PHP REST API that satisfies all the above requirements.
 
 **Status:** Completed <img src="https://api.iconify.design/lucide:check-circle-2.svg?color=%2310b981" width="18" align="text-bottom" />
 
