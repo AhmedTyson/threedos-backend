@@ -27,4 +27,5 @@ tasks/task-07/vite.config.js
 tasks/task-07/fix-layouts.js
 tasks/task-07/Task7.md
 temp_index.html
-tasks/task-07/backend/.serena/memories/memory_maintenance.md
+tasks/task-07/backend/.serena/
+tasks/task-07/backend/telescope-ui/
