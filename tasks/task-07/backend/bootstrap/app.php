@@ -16,11 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (\Throwable $e, Request $request) {
-            $status = $e->getCode();
-            if (!is_int($status) || $status < 100 || $status > 599) {
-                $status = 500;
-            }
-            return response()->json(['message' => $e->getMessage()], $status);
+        $exceptions->shouldRenderJsonWhen(function (Request $request) {
+            return $request->is('api/*');
         });
     })->create();

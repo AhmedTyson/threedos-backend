@@ -1,0 +1,278 @@
+{
+    "info": {
+        "name": "To-Do List Management API",
+        "description": "# 📘 To-Do List Management System API\n\nWelcome to the official API documentation for the To-Do List Management System. This RESTful API allows you to programmatically manage Categories and Tasks.\n\n## 🚀 Getting Started\n\n**Base URL:** `http://127.0.0.1:8000/api`\n**Authentication:** None Required\n**Data Format:** JSON only (`Accept: application/json`)\n\n---\n\n## 🛑 Standard Error Codes\n\nThis API strictly adheres to standard HTTP response codes:\n\n*   `200 OK` - The request was successful.\n*   `201 Created` - The resource was successfully created.\n*   `404 Not Found` - The requested ID does not exist in the database.\n*   `422 Unprocessable Entity` - The request payload failed validation (e.g., missing required fields, or a duplicate name).\n*   `500 Internal Server Error` - A fatal backend or database exception occurred.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Categories",
+            "description": "Categories allow you to group related tasks together (e.g., *Work*, *Personal*, *Fitness*).\n\n> ⚠️ **Warning:** Deleting a category will automatically cascade and permanently delete all tasks associated with it.",
+            "item": [
+                {
+                    "name": "List all Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["categories"]
+                        },
+                        "description": "Retrieves an array of all categories stored in the database."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [ { "key": "Accept", "value": "application/json" } ],
+                                "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+                            "body": "{\n    \"status\": \"success\",\n    \"message\": \"Category list\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Work\",\n            \"description\": \"Job-related tasks\",\n            \"created_at\": \"2026-06-30 10:00:00\",\n            \"updated_at\": \"2026-06-30 10:00:00\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a Category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" },
+                            { "key": "Content-Type", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Fitness\",\n    \"description\": \"Gym and running schedules\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["categories"]
+                        },
+                        "description": "Creates a new category.\n\n### Request Body Parameters\n*   `name` *(string, required)* - The name of the category. Maximum 50 characters. Must be globally unique.\n*   `description` *(string, optional)* - Extended details about the category. Maximum 500 characters."
+                    },
+                    "response": [
+                        {
+                            "name": "201 Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [ { "key": "Accept", "value": "application/json" }, { "key": "Content-Type", "value": "application/json" } ],
+                                "body": { "mode": "raw", "raw": "{\n    \"name\": \"Fitness\",\n    \"description\": \"Gym and running schedules\"\n}" },
+                                "url": { "raw": "{{base_url}}/categories", "host": ["{{base_url}}"], "path": ["categories"] }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+                            "body": "{\n    \"status\": \"success\",\n    \"message\": \"Category created\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Fitness\",\n        \"description\": \"Gym and running schedules\",\n        \"created_at\": \"2026-06-30 10:05:00\",\n        \"updated_at\": \"2026-06-30 10:05:00\"\n    }\n}"
+                        },
+                        {
+                            "name": "422 Validation Error",
+                            "status": "Unprocessable Entity",
+                            "code": 422,
+                            "_postman_previewlanguage": "json",
+                            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+                            "body": "{\n    \"status\": \"error\",\n    \"message\": \"The name has already been taken.\",\n    \"errors\": {\n        \"name\": [\n            \"The name has already been taken.\"\n        ]\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get a Category",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["categories", "1"]
+                        },
+                        "description": "Retrieves the details of a single category by its database ID."
+                    },
+                    "response": [
+                        {
+                            "name": "404 Not Found",
+                            "status": "Not Found",
+                            "code": 404,
+                            "_postman_previewlanguage": "json",
+                            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+                            "body": "{\n    \"status\": \"error\",\n    \"message\": \"Resource not found.\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a Category",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" },
+                            { "key": "Content-Type", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Updated Fitness\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["categories", "1"]
+                        },
+                        "description": "Updates an existing category. Only include the fields you wish to modify.\n\n### Request Body Parameters\n*   `name` *(string, optional)* - The new name of the category. Maximum 50 characters. Must be globally unique.\n*   `description` *(string, optional)* - New extended details."
+                    }
+                },
+                {
+                    "name": "Delete a Category",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["categories", "1"]
+                        },
+                        "description": "Permanently deletes a category.\n\n> ⚠️ **Architecture Note:** Deleting a category executes a SQL `CASCADE` delete, meaning all Tasks bound to this category will also be destroyed simultaneously."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Tasks",
+            "description": "Endpoints for managing individual to-do list tasks.",
+            "item": [
+                {
+                    "name": "List all Tasks",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/tasks",
+                            "host": ["{{base_url}}"],
+                            "path": ["tasks"]
+                        },
+                        "description": "Retrieves an array of all tasks stored in the database. Every task returned automatically eager-loads its associated Category object."
+                    },
+                    "response": [
+                        {
+                            "name": "200 OK",
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+                            "body": "{\n    \"status\": \"success\",\n    \"message\": \"Task list\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"category\": {\n                \"id\": 1,\n                \"name\": \"Work\",\n                \"description\": \"Tasks related to my job\",\n                \"created_at\": \"2026-06-30 10:00:00\",\n                \"updated_at\": \"2026-06-30 10:00:00\"\n            },\n            \"title\": \"Finish API endpoints\",\n            \"description\": \"Write Postman documentation and wrap up.\",\n            \"due_date\": \"2026-07-01\",\n            \"is_completed\": false,\n            \"created_at\": \"2026-06-30 10:10:00\",\n            \"updated_at\": \"2026-06-30 10:10:00\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a Task",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" },
+                            { "key": "Content-Type", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"category_id\": 1,\n    \"title\": \"Write Unit Tests\",\n    \"description\": \"Ensure high test coverage.\",\n    \"due_date\": \"2026-07-15\",\n    \"is_completed\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/tasks",
+                            "host": ["{{base_url}}"],
+                            "path": ["tasks"]
+                        },
+                        "description": "Creates a new to-do list task.\n\n### Request Body Parameters\n*   `category_id` *(integer, optional)* - The ID of the category this task belongs to. It must exist in the database.\n*   `title` *(string, required)* - The name of the task. Max 100 characters. Must be globally unique.\n*   `description` *(string, optional)* - Extended details about the task. Max 300 characters.\n*   `due_date` *(date, optional)* - Target completion date formatted as `YYYY-MM-DD`.\n*   `is_completed` *(boolean, optional)* - Defaults to `false`."
+                    }
+                },
+                {
+                    "name": "Get a Task",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/tasks/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["tasks", "1"]
+                        },
+                        "description": "Retrieves the details of a single task by its database ID, including its associated category."
+                    }
+                },
+                {
+                    "name": "Update a Task",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" },
+                            { "key": "Content-Type", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"is_completed\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/tasks/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["tasks", "1"]
+                        },
+                        "description": "Updates an existing task. Only include the fields you wish to modify. \n\n*If you pass a `title` that belongs to a different task, the API will return a 422 error.*"
+                    }
+                },
+                {
+                    "name": "Delete a Task",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/tasks/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["tasks", "1"]
+                        },
+                        "description": "Permanently deletes the task."
+                    }
+                }
+            ]
+        },
+        {
+            "name": "System / Setup",
+            "description": "Utility endpoints for development and testing.",
+            "item": [
+                {
+                    "name": "Wipe & Seed Database",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/setup/seed",
+                            "host": ["{{base_url}}"],
+                            "path": ["setup", "seed"]
+                        },
+                        "description": "> ⚠️ **DANGER:** This endpoint drops all tables, runs migrations, and seeds dummy data. It is highly useful for resetting the database state locally, but should never be exposed in production."
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000/api",
+            "type": "string"
+        }
+    ]
+}
