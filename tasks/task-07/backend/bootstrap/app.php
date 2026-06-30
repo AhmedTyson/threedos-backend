@@ -24,7 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             $cause = $e->getPrevious();
 
             if (! $cause instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-                return null; // not a model miss — let Laravel render it normally
+                return null;
             }
 
             $modelName = class_basename($cause->getModel());
