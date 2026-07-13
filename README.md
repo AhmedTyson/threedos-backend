@@ -45,9 +45,11 @@ threedos-backend/
     │   └── backend/
     ├── task-06/
     │   └── Task6.md
-    └── task-07/
-        ├── Task7.md
-        └── backend/
+    ├── task-07/
+    │   ├── Task7.md
+    │   └── backend/
+    └── task-08/
+        └── Task8.md
 ```
 
 Each `task-XX` folder is self-contained. The `task.md` file describes the assignment. The solution files contain the actual work: scripts, schemas, or any documentation the task required.
@@ -62,6 +64,7 @@ Each `task-XX` folder is self-contained. The `task.md` file describes the assign
 | tasks/task-05 | Airline Management System | PHP / PDO / REST API | ERD Design, Full REST API with ACID Transactions |
 | tasks/task-06 | Doctorna REST API | PHP / PDO / REST API | Vanilla PHP, no framework, JWT Auth, Redis Caching |
 | tasks/task-07 | To-Do List Management API | Laravel / SQLite | Eloquent ORM, Migrations, Full CRUD, API |
+| tasks/task-08 | Tech Accessories E-Commerce API (Task Session 9) | Laravel / Redis / JWT | Team 4 Leader. Full production-grade API, RBAC, Scramble docs. [View full team repo](https://github.com/AhmedTyson/t4-3dos-backend-task9) |
 
 ---
 
