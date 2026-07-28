@@ -1,0 +1,3272 @@
+{
+  "info": {
+    "name": "Bin2Earn / GreenEco — Full API",
+    "description": "Complete collection by user flow. Pre-filled headers, bodies, pagination, filters.\n\nFlow:\nRegister → Verify Email → Login → Profile → Address → Pickup → Bin Request → Rewards → Redeem\n\nAdmin:\nLogin → Dashboard → Pickups → Users → Drivers → Bins → Rewards → Reports\n\n---\n\n## Rate Limiting\n- Auth routes (login, register, forgot-password, reset-password, resend-verification): **5 requests/minute**\n- All other API routes: **60 requests/minute** per user (or per IP for unauthenticated)\n- Returns `429 Too Many Requests` with `Retry-After` header on limit exceeded\n",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api"
+    },
+    {
+      "key": "token",
+      "value": "PASTE_YOUR_JWT_HERE"
+    },
+    {
+      "key": "id",
+      "value": "15"
+    },
+    {
+      "key": "address",
+      "value": "20"
+    },
+    {
+      "key": "binRequest",
+      "value": "7"
+    },
+    {
+      "key": "reward",
+      "value": "1"
+    },
+    {
+      "key": "driver",
+      "value": "1"
+    },
+    {
+      "key": "user",
+      "value": "15"
+    },
+    {
+      "key": "notification",
+      "value": "1"
+    },
+    {
+      "key": "pickup",
+      "value": "16"
+    },
+    {
+      "key": "adminPickup",
+      "value": "15"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health",
+      "item": [
+        {
+          "name": "[GET] /health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ],
+              "variable": [],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Health endpoint returns ok', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.success).to.be.true;",
+                  "    pm.expect(json.data.status).to.eql('ok');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "[POST] /register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Ahmed\",\n    \"email\": \"ahmed.elsayed.net27@gmail.com\",\n    \"phone\": \"01099887766\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[POST] /login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ahmed.elsayed.net27@gmail.com\",\n    \"password\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    console.log('Token set: ' + jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "[POST] /resend-verification-email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/resend-verification-email",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "resend-verification-email"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ahmed.elsayed.net27@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /email/verify/{id}/{hash}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/email/verify/{{id}}/{{hash}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "email",
+                "verify",
+                "1",
+                "testhash"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                },
+                {
+                  "key": "hash",
+                  "value": "{{hash}}",
+                  "description": "Hash ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[POST] /forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forgot-password"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ahmed.elsayed.net27@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[POST] /reset-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reset-password"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"ahmed.elsayed.net27@gmail.com\",\n    \"token\": \"RESET_TOKEN_FROM_EMAIL\",\n    \"password\": \"NewPass@123\",\n    \"password_confirmation\": \"NewPass@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PUT] /me",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "me"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Ahmed G",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "01099999999",
+                  "type": "text"
+                },
+                {
+                  "key": "photo",
+                  "value": "",
+                  "type": "file",
+                  "description": "Profile photo (jpg/jpeg/png, max 2MB)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Addresses",
+      "item": [
+        {
+          "name": "[GET] /addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /addresses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"label\": \"Home\",\n    \"governorate\": \"Cairo\",\n    \"city\": \"Nasr City\",\n    \"district\": \"Zone 1\",\n    \"street\": \"Abbas El Akkad\",\n    \"building\": \"15\",\n    \"floor\": \"3\",\n    \"apartment\": \"12\",\n    \"phone\": \"01200000000\",\n    \"type\": \"home\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[PUT] /addresses/{address}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses/{{address}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses",
+                "address"
+              ],
+              "variable": [
+                {
+                  "key": "address",
+                  "value": "{{address}}",
+                  "description": "Address ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"label\": \"Home\",\n    \"governorate\": \"Cairo\",\n    \"city\": \"Nasr City\",\n    \"district\": \"Zone 1\",\n    \"street\": \"Abbas El Akkad\",\n    \"building\": \"15\",\n    \"floor\": \"3\",\n    \"apartment\": \"12\",\n    \"phone\": \"01200000000\",\n    \"type\": \"home\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[DELETE] /addresses/{address}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses/{{address}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses",
+                "address"
+              ],
+              "variable": [
+                {
+                  "key": "address",
+                  "value": "{{address}}",
+                  "description": "Address ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Pickup Requests",
+      "item": [
+        {
+          "name": "[GET] /pickup-requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pickup-requests?page=1&per_page=15&status=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pickup-requests"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter: 1=Pending..7=Completed 8=Canceled",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /pickup-requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pickup-requests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pickup-requests"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"address_id\": 20,\n    \"date\": \"2026-07-31\",\n    \"time_slot\": \"10:00-12:00\",\n    \"notes\": \"Glass bottles + newspapers\",\n    \"waste_category_id\": 1,\n    \"estimated_kg\": 5.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /pickup-requests/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pickup-requests/{{pickup}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pickup-requests",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "pickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /pickup-requests/{id}/cancel",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pickup-requests/{{pickup}}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pickup-requests",
+                "1",
+                "cancel"
+              ],
+              "variable": [
+                {
+                  "key": "pickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Bin Requests",
+      "item": [
+        {
+          "name": "[GET] /bin-requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/bin-requests?page=1&per_page=15&status=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bin-requests"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter: 1=Pending 2=Dispatched 3=Delivered 4=Canceled",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /bin-requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/bin-requests",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bin-requests"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"quantity\": 2,\n    \"address_id\": 20,\n    \"payment_method\": \"points\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /bin-requests/{binRequest}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/bin-requests/{{binRequest}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bin-requests",
+                "binRequest"
+              ],
+              "variable": [
+                {
+                  "key": "binRequest",
+                  "value": "{{binRequest}}",
+                  "description": "BinRequest ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /bin-requests/{binRequest}/cancel",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/bin-requests/{{binRequest}}/cancel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bin-requests",
+                "binRequest",
+                "cancel"
+              ],
+              "variable": [
+                {
+                  "key": "binRequest",
+                  "value": "{{binRequest}}",
+                  "description": "BinRequest ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Rewards & Vouchers",
+      "item": [
+        {
+          "name": "[GET] /rewards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rewards?page=1&per_page=15&type=&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "rewards"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": ""
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /rewards/{id}/redeem",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/rewards/{{id}}/redeem",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "rewards",
+                "1",
+                "redeem"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reward_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /vouchers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/vouchers?page=1&per_page=15&redeemed=&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vouchers"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": ""
+                },
+                {
+                  "key": "redeemed",
+                  "value": "",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Notifications",
+      "item": [
+        {
+          "name": "[GET] /notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications?page=1&per_page=20&unread_only=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "key": "unread_only",
+                  "value": "",
+                  "description": "Filter unread only (true/false)",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /notifications/read-all",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/read-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /notifications/{notification}/read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/{{notification}}/read",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "notification",
+                "read"
+              ],
+              "variable": [
+                {
+                  "key": "notification",
+                  "value": "{{notification}}",
+                  "description": "Notification ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin — Dashboard",
+      "item": [
+        {
+          "name": "[GET] /admin/analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Admin — Users",
+      "item": [
+        {
+          "name": "[GET] /admin/users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/users/{id}/suspend",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users/{{id}}/suspend",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "1",
+                "suspend"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/users/{id}/activate",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users/{{id}}/activate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "1",
+                "activate"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/users/{id}/history",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users/{{id}}/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "1",
+                "history"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[POST] /admins/assign/{user}",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admins/assign/{{user}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admins",
+                "assign",
+                "user"
+              ],
+              "variable": [
+                {
+                  "key": "user",
+                  "value": "{{user}}",
+                  "description": "User ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin — Pickups",
+      "item": [
+        {
+          "name": "[GET] /admin/pickups",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups?page=1&per_page=15&status=&user_id=&driver_id=&from_date=&to_date=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status ID",
+                  "disabled": true
+                },
+                {
+                  "key": "user_id",
+                  "value": "",
+                  "description": "Filter by user",
+                  "disabled": true
+                },
+                {
+                  "key": "driver_id",
+                  "value": "",
+                  "description": "Filter by driver",
+                  "disabled": true
+                },
+                {
+                  "key": "from_date",
+                  "value": "",
+                  "description": "Start date Y-m-d",
+                  "disabled": true
+                },
+                {
+                  "key": "to_date",
+                  "value": "",
+                  "description": "End date Y-m-d",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/pickups/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/pickups/{id}/accept",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}/accept",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1",
+                "accept"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/pickups/{id}/reject",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}/reject",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1",
+                "reject"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/pickups/{id}/assign-driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}/assign-driver",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1",
+                "assign-driver"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"driver_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/pickups/{id}/assign-factory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}/assign-factory",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1",
+                "assign-factory"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"factory_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/pickups/{id}/status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/pickups/{{adminPickup}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "pickups",
+                "1",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "adminPickup",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Admin — Drivers",
+      "item": [
+        {
+          "name": "[GET] /admin/drivers/available",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/available",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers",
+                "available"
+              ],
+              "variable": [],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/drivers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/drivers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Mohamed Driver\",\n    \"email\": \"driver1@greeneco.com\",\n    \"phone\": \"01122334455\",\n    \"password\": \"Password@123\",\n    \"license_number\": \"L-987654\",\n    \"vehicle_type\": \"Truck\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[PUT] /admin/drivers/{driver}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/{{driver}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers",
+                "driver"
+              ],
+              "variable": [
+                {
+                  "key": "driver",
+                  "value": "{{driver}}",
+                  "description": "Driver ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Mohamed Driver\",\n    \"email\": \"driver1@greeneco.com\",\n    \"phone\": \"01012345678\",\n    \"password\": \"Password@123\",\n    \"license_number\": \"L-987654\",\n    \"vehicle_type\": \"Truck\",\n    \"license\": \"L-12345\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[DELETE] /admin/drivers/{driver}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/{{driver}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers",
+                "driver"
+              ],
+              "variable": [
+                {
+                  "key": "driver",
+                  "value": "{{driver}}",
+                  "description": "Driver ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/drivers/{driver}/pickups",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/drivers/{{driver}}/pickups",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "drivers",
+                "driver",
+                "pickups"
+              ],
+              "variable": [
+                {
+                  "key": "driver",
+                  "value": "{{driver}}",
+                  "description": "Driver ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Admin — Bin Requests",
+      "item": [
+        {
+          "name": "[GET] /admin/bin-requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/bin-requests?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "bin-requests"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[PATCH] /admin/bin-requests/{binRequest}/status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/bin-requests/{{binRequest}}/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "bin-requests",
+                "binRequest",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "binRequest",
+                  "value": "{{binRequest}}",
+                  "description": "BinRequest ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Admin — Rewards",
+      "item": [
+        {
+          "name": "[GET] /admin/rewards",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/rewards?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "rewards"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/rewards",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/rewards",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "rewards"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Breadfast 10% Off",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "10% off your next Breadfast order",
+                  "type": "text"
+                },
+                {
+                  "key": "points_cost",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "percent",
+                  "type": "text"
+                },
+                {
+                  "key": "value",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/rewards/{reward}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/rewards/{{reward}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "rewards",
+                "reward"
+              ],
+              "variable": [
+                {
+                  "key": "reward",
+                  "value": "{{reward}}",
+                  "description": "Reward ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PUT] /admin/rewards/{reward}",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/rewards/{{reward}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "rewards",
+                "reward"
+              ],
+              "variable": [
+                {
+                  "key": "reward",
+                  "value": "{{reward}}",
+                  "description": "Reward ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "_method",
+                  "value": "PUT",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "value": "Breadfast 10% Off",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "10% off your next Breadfast order",
+                  "type": "text"
+                },
+                {
+                  "key": "points_cost",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "percent",
+                  "type": "text"
+                },
+                {
+                  "key": "value",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "1",
+                  "type": "text"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[DELETE] /admin/rewards/{reward}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/rewards/{{reward}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "rewards",
+                "reward"
+              ],
+              "variable": [
+                {
+                  "key": "reward",
+                  "value": "{{reward}}",
+                  "description": "Reward ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Admin — Vouchers",
+      "item": [
+        {
+          "name": "[GET] /admin/vouchers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/vouchers?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "vouchers"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/vouchers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/vouchers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "vouchers"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user_id\": 15,\n    \"code\": \"SPECIAL-50\",\n    \"type\": \"fixed\",\n    \"value\": 50,\n    \"expiry_date\": \"2026-12-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/vouchers/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/vouchers/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "vouchers",
+                "{{id}}"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Voucher ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PUT] /admin/vouchers/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/vouchers/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "vouchers",
+                "{{id}}"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Voucher ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": 50,\n    \"type\": \"fixed\",\n    \"min_order\": 100,\n    \"expiry_date\": \"2026-12-31\",\n    \"is_active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[DELETE] /admin/vouchers/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/vouchers/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "vouchers",
+                "{{id}}"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Voucher ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "14. Admin — Factories",
+      "item": [
+        {
+          "name": "[GET] /admin/factories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/factories?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "factories"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/factories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/factories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "factories"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Cairo Recycling Co.\",\n    \"type\": \"plastic\",\n    \"phone\": \"0223456789\",\n    \"address\": \"10 Industrial Zone, Cairo\",\n    \"supported_areas\": [\n        \"Nasr City\",\n        \"Heliopolis\"\n    ],\n    \"daily_limits\": 5000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/factories/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/factories/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "factories",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        },
+        {
+          "name": "[PUT] /admin/factories/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/factories/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "factories",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Cairo Recycling Co.\",\n    \"type\": \"plastic\",\n    \"phone\": \"0223456789\",\n    \"address\": \"10 Industrial Zone, Cairo\",\n    \"supported_areas\": [\n        \"Nasr City\",\n        \"Heliopolis\"\n    ],\n    \"daily_limits\": 5000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/factories/{id}/deliveries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/factories/{{id}}/deliveries",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "factories",
+                "1",
+                "deliveries"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "15. Admin — Waste Categories",
+      "item": [
+        {
+          "name": "[GET] /admin/waste-categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/waste-categories?page=1&per_page=15&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "waste-categories"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": ""
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": ""
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/waste-categories",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/waste-categories",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "waste-categories"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Plastic\",\n    \"description\": \"Plastic bottles & containers\",\n    \"points_per_kg\": 10,\n    \"price_per_kg\": 5.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[PUT] /admin/waste-categories/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/waste-categories/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "waste-categories",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Plastic\",\n    \"description\": \"Plastic bottles & containers\",\n    \"points_per_kg\": 10,\n    \"price_per_kg\": 5.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[DELETE] /admin/waste-categories/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/waste-categories/{{id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "waste-categories",
+                "1"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "16. Admin — Reports",
+      "item": [
+        {
+          "name": "[GET] /admin/reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/reports?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "reports"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "[POST] /admin/reports/generate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/reports/generate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "reports",
+                "generate"
+              ],
+              "variable": [],
+              "query": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"from\": \"2026-07-01\",\n    \"to\": \"2026-07-31\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[GET] /admin/reports/{id}/download",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/reports/{{id}}/download",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "reports",
+                "1",
+                "download"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{id}}",
+                  "description": "Id ID"
+                }
+              ],
+              "query": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "17. Admin — Notifications",
+      "item": [
+        {
+          "name": "[GET] /admin/notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "description": "Response format"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "JWT Bearer token"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/notifications?page=1&per_page=15",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "notifications"
+              ],
+              "variable": [],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "(Optional) Page number"
+                },
+                {
+                  "key": "per_page",
+                  "value": "15",
+                  "description": "(Optional) Items per page (max 100)"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
