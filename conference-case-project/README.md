@@ -1,6 +1,6 @@
 <div align="center">
   <br />
-  <img src="fullstack/Frontend/logo.png" width="160" alt="Itinera logo" />
+  <img src="logo.png" width="160" alt="Itinera logo" />
   <br />
 
   # Itinera — Global Luxury Travel & Trip Planning Platform
