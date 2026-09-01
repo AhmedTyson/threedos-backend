@@ -74,7 +74,7 @@ Each `task-XX` folder is self-contained. The `task.md` file describes the assign
 | tasks/task-07 | To-Do List Management API | Laravel / SQLite | Eloquent ORM, Migrations, Full CRUD, API |
 | tasks/task-08 | Tech Accessories E-Commerce API (Task Session 9) | Laravel / Redis / JWT | Team 4 Leader. Full production-grade API, RBAC, Scramble docs. [View full team repo](https://github.com/AhmedTyson/t4-3dos-backend-task9) |
 | semi-conference | GreenEco — Semi-Conference (Team 3) | Laravel 12 / JWT / MySQL | Smart Recycling Platform, scheduled pickups & rewards. [View fork](https://github.com/AhmedTyson/Team3-backend-GreenEco) |
-| conference-case-project | Itinera — Conference Case Study (Team 2) | Laravel 12 / JWT / Redis / PayMob / Groq AI | Luxury Travel orchestration, 213 routes, threedos-style README. [View conference repo](https://github.com/AhmedTyson/Team2-Conference-Project) |
+| conference-case-project | Itinera — Conference Case Study (Team 2) | Laravel 12 / JWT / Redis / PayMob / Groq AI | Luxury Travel orchestration, 106 distinct routes (213 operations, 107 GET), threedos-style README. [View conference repo](https://github.com/AhmedTyson/Team2-Conference-Project) |
 
 ---
 
